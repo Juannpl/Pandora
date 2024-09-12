@@ -1,28 +1,89 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+# main.py
 
-# Initialiser l'application FastAPI
+from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+from pydantic import BaseModel
+from typing import List, Optional
+
+# Configurer la base de données PostgreSQL
+DATABASE_URL = "postgresql://username:password@localhost:5432/mydatabase"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# Modèle d'utilisateur
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+    age = Column(Integer)
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
-# Modèle de données utilisant Pydantic
-class Item(BaseModel):
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+class UserCreate(BaseModel):
     name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
+    email: str
+    age: Optional[int] = None
 
-# Route de base
-@app.get("/")
-def read_root():
-    return {"message": "Bienvenue sur votre API FastAPI!"}
+class UserRead(BaseModel):
+    id: int
+    name: str
+    email: str
+    age: Optional[int] = None
 
-# Route pour lire un item avec un paramètre
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+    class Config:
+        orm_mode = True
 
-# Route pour créer un item
-@app.post("/items/")
-def create_item(item: Item):
-    return {"item_name": item.name, "item_price": item.price, "item_tax": item.tax}
+@app.post("/users/", response_model=UserRead)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = User(name=user.name, email=user.email, age=user.age)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.get("/users/", response_model=List[UserRead])
+def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    users = db.query(User).offset(skip).limit(limit).all()
+    return users
+
+@app.get("/users/{user_id}", response_model=UserRead)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+@app.put("/users/{user_id}", response_model=UserRead)
+def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    db_user.name = user.name
+    db_user.email = user.email
+    db_user.age = user.age
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(db_user)
+    db.commit()
+    return {"message": "User deleted successfully"}
