@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 # Configurer la base de données PostgreSQL
-DATABASE_URL = "postgresql://username:password@localhost:5432/mydatabase"
+DATABASE_URL = "postgresql://juannpl:Juan.Etna10@localhost:5432/juannpl_db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
