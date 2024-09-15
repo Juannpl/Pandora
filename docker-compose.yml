@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  fastapi_backend:
+    build:
+      context: ./server  # Contexte de construction du dossier server
+    volumes:
+      - ./server:/app  # Monte le dossier server dans /app du conteneur
+    ports:
+      - "8000:8000"  # Mappe le port 8000 du conteneur au port 8000 de l'hôte
+    environment:
+      - PYTHONPATH=/app  # Définit le PYTHONPATH pour que FastAPI trouve les modules
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: your_user
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_db
+    ports:
+      - "5432:5432"  # Mappe le port 5432 du conteneur au port 5432 de l'hôte
+
+volumes:
+  postgres_data:
