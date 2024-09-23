@@ -1,9 +1,10 @@
 version: '3.8'
 
 services:
-  fastapi_backend:
+  fastapi-backend:
     build:
       context: ./server  # Contexte de construction du dossier server
+      dockerfile: ./server/Dockerfile
     volumes:
       - ./server:/app  # Monte le dossier server dans /app du conteneur
     ports:
@@ -18,9 +19,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: your_user
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: your_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: pandora_db
     ports:
       - "5432:5432"  # Mappe le port 5432 du conteneur au port 5432 de l'hôte
 
