@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Définit le répertoire de travail dans le conteneur
-WORKDIR /app
+WORKDIR /server
 
 # Copie le fichier requirements.txt dans le répertoire de travail du conteneur
 COPY requirements.txt .

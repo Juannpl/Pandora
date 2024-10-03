@@ -1,12 +1,12 @@
 services:
   fastapi-backend:
     build:
-      context: ./server  # Contexte de construction du dossier server
+      context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./server:/app  # Monte le dossier server dans /app du conteneur
+      - ./server:/app
     ports:
-      - "8000:8000"  # Mappe le port 8000 du conteneur au port 8000 de l'hôte
+      - "8000:8000"
     environment:
       - PYTHONPATH=/app  # Définit le PYTHONPATH pour que FastAPI trouve les modules
     depends_on:
@@ -25,7 +25,25 @@ services:
     networks:
       - data
 
+#  react-native:
+#    build:
+#      context: ./client  # Dossier du projet React Native
+#      dockerfile: Dockerfile  # Dockerfile pour le service React Native
+#    volumes:
+#      - ./client:/app  # Monte le dossier client dans /app du conteneur
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ~/.android:/root/.android
+#    ports:
+#      - "8081:8081"  # Mappe le port 8081 pour le serveur Metro
+#    environment:
+#      - NODE_ENV=development  # Définit l'environnement de développement
+#    networks:
+#      - data
+#    depends_on:
+#      - fastapi-backend  # Assure que le backend FastAPI démarre d'abord
+
 volumes:
   postgres_data:
+
 networks:
   data:
