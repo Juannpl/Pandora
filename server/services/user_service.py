@@ -12,8 +12,8 @@ def create_user(db: Session, user: UserCreate):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered.")
-    
-    # Encodage du mot de passe
+
+    # Hashage du mot de passe
     hashed_password = get_password_hash(user.password)
     
     db_user = User(
@@ -25,7 +25,7 @@ def create_user(db: Session, user: UserCreate):
         address=user.address,
         city=user.city,
         country=user.country,
-        hashed_password=hashed_password  # Si tu gères les mots de passes
+        hashed_password=hashed_password 
     )
     db.add(db_user)
     db.commit()
