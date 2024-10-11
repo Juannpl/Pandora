@@ -4,8 +4,8 @@ from schemas.user import UserCreate
 from fastapi import HTTPException
 from typing import Optional
 
-# Pour le hashage des mots de passe (si applicable)
-# from app.core.security import get_password_hash
+# Pour le hashage des mots de passe
+from core.security import get_password_hash
 
 def create_user(db: Session, user: UserCreate):
     # Vérifie si l'utilisateur existe déjà
@@ -13,8 +13,8 @@ def create_user(db: Session, user: UserCreate):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered.")
     
-    # Encodage du mot de passe (si applicable)
-    # hashed_password = get_password_hash(user.password)
+    # Encodage du mot de passe
+    hashed_password = get_password_hash(user.password)
     
     db_user = User(
         first_name=user.first_name,
@@ -25,7 +25,7 @@ def create_user(db: Session, user: UserCreate):
         address=user.address,
         city=user.city,
         country=user.country,
-        # hashed_password=hashed_password  # Si tu gères les mots de passe
+        hashed_password=hashed_password  # Si tu gères les mots de passes
     )
     db.add(db_user)
     db.commit()
