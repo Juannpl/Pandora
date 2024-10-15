@@ -1,29 +1,39 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Alert, Text, TouchableOpacity } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { createUser } from '../services/api';
 import formStyles from '../styles/formStyles';
+
+// Définir les types des paramètres de la pile de navigation
+type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+};
+
+// Typage pour l'objet navigation
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Register'
+>;
 
 interface FormData {
   first_name: string;
   last_name: string;
   email: string;
-  age: string;  // On peut laisser en string si tu veux permettre plus de flexibilité à la saisie
   phone_number: string;
-  address: string;
-  city: string;
-  country: string;
+  password: string;
 }
 
-const CreateUserForm = () => {
+const CreateUserForm: React.FC = () => {
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+
   const [formData, setFormData] = useState<FormData>({
     first_name: '',
     last_name: '',
     email: '',
-    age: '',
     phone_number: '',
-    address: '',
-    city: '',
-    country: ''
+    password: '',
   });
 
   const handleInputChange = (name: keyof FormData, value: string) => {
@@ -41,60 +51,60 @@ const CreateUserForm = () => {
 
   return (
     <View style={formStyles.container}>
-      <TextInput
-        style={formStyles.input}
-        placeholder="First Name"
-        value={formData.first_name}
-        onChangeText={(text) => handleInputChange('first_name', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Last Name"
-        value={formData.last_name}
-        onChangeText={(text) => handleInputChange('last_name', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Email"
-        value={formData.email}
-        onChangeText={(text) => handleInputChange('email', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Age"
-        keyboardType="numeric"
-        value={formData.age}
-        onChangeText={(text) => handleInputChange('age', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Phone Number"
-        value={formData.phone_number}
-        onChangeText={(text) => handleInputChange('phone_number', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Address"
-        value={formData.address}
-        onChangeText={(text) => handleInputChange('address', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="City"
-        value={formData.city}
-        onChangeText={(text) => handleInputChange('city', text)}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Country"
-        value={formData.country}
-        onChangeText={(text) => handleInputChange('country', text)}
-      />
-      <Button
-        title="Create User"
-        onPress={handleSubmit}
-        color="#007bff"
-      />
+      <View style={formStyles.division}>
+        <Text style={[formStyles.title, formStyles.text]}>Pandora</Text>
+      </View>
+      <View style={formStyles.section}>
+        <View style={formStyles.inputContainer} >
+          <TextInput
+            style={formStyles.input}
+            placeholder="Prénom"
+            value={formData.first_name}
+            onChangeText={(text) => handleInputChange('first_name', text)}
+          />
+        </View>
+        <View style={formStyles.inputContainer} >
+          <TextInput
+            style={formStyles.input}
+            placeholder="Nom"
+            value={formData.first_name}
+            onChangeText={(text) => handleInputChange('last_name', text)}
+          />
+        </View>
+        <View style={formStyles.inputContainer} >
+          <TextInput
+            style={formStyles.input}
+            placeholder="Email"
+            value={formData.email}
+            onChangeText={(text) => handleInputChange('email', text)}
+          />
+        </View>
+        <View style={formStyles.inputContainer} >
+          <TextInput
+            style={formStyles.input}
+            placeholder="Numéro de téléphone"
+            value={formData.phone_number}
+            onChangeText={(text) => handleInputChange('phone_number', text)}
+          />
+        </View>
+        <View style={formStyles.inputContainer} >
+          <TextInput
+            style={formStyles.input}
+            placeholder="Mot de passe"
+            secureTextEntry
+            value={formData.password}
+            onChangeText={(text) => handleInputChange('password', text)}
+          />
+        </View>
+      </View>
+      <View style={formStyles.division}>
+        <TouchableOpacity style={formStyles.button} onPress={handleSubmit}>
+          <Text style={formStyles.buttonText}>S'inscrire</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={formStyles.link}>Vous avez compte ?</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

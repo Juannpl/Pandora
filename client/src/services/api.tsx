@@ -2,11 +2,7 @@ interface UserData {
   first_name: string;
   last_name: string;
   email: string;
-  age: string;
   phone_number: string;
-  address: string;
-  city: string;
-  country: string;
 }
 
 export const createUser = async (userData: UserData) => {

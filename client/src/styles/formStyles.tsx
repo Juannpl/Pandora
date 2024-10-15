@@ -1,32 +1,99 @@
 import { StyleSheet } from 'react-native';
 
 const formStyles = StyleSheet.create({
+
+  text: {
+    fontFamily: 'Poppins-Thin',
+  },
+  
   container: {
-    padding: 20,
-    backgroundColor: '#f5f5f5',  // Assure-toi que l'arrière-plan n'est pas blanc
+    backgroundColor: '#0E2954',  // Assure-toi que l'arrière-plan n'est pas blanc
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  title: {
+    color: 'white',  // Couleur du titre
+    fontSize: 50,
+    textAlign: 'center',
+  },
+
+  section: {
+    height: '50%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+
+  division: {
+    height: '20%',
+    width: '100%',
+
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  inputContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    height: 50,
+    marginBottom: '10%',
   },
 
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 5,
-    backgroundColor: 'white',  // Couleur de fond pour que l'input soit bien visible
-    color: 'black',  // Assure-toi que le texte soit bien visible
+    fontFamily: 'Poppins-Regular',
+    backgroundColor: 'white',
+    color: 'black',
+
+    borderRadius: 20,
+
+    width: '100%',
+    height: '100%',
+
+    fontSize: 18,
+    paddingLeft: 20,
   },
 
   button: {
-    backgroundColor: 'black',  // Couleur du bouton
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
+    backgroundColor: '#363062',  // Couleur du bouton
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    height: 50,
+    borderRadius: 20,
+
+    //ANDROID
+    elevation: 3,
+
+    // IOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
   },
 
   buttonText: {
-    color: 'white',  // Couleur du texte du bouton
+    fontFamily: 'Poppins-SemiBold',
+    color: 'white',
     textAlign: 'center',
+    fontSize: 19,
   },
+
+  link: {
+    marginTop: 15,
+    color: 'white',
+    textDecorationLine: 'underline',
+    fontSize: 15,
+  },
+
 });
 
 export default formStyles;
