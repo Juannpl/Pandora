@@ -1,12 +1,27 @@
 from fastapi import FastAPI
-from models.user import Base
+from api.endpoints import user_routes # Importez les deux ensembles de routes
 from db.database import engine
-from api.v1.endpoints.user_routes import router as user_router
+from models import user
 
-# Créer les tables de la base de données
-Base.metadata.create_all(bind=engine)
+# Initialisation de l'application FastAPI
+app = FastAPI(
+    title="MyAPI",
+    version="1.0",
+    description="API Pandora"
+)
 
-app = FastAPI()
+async def create_database():
+    async with engine.begin() as conn:
+        await conn.run_sync(user.Base.metadata.create_all)
 
-# Inclure le routeur pour les utilisateurs
-app.include_router(user_router, prefix="/users", tags=["users"])
+@app.on_event("startup")
+async def startup_event():
+    await create_database()
+
+# Inclure les routes des utilisateurs
+app.include_router(user_routes.router, prefix="/api/v1", tags=["Users"])
+
+# Route de santé pour vérifier que l'API fonctionne
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}

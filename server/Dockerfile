@@ -1,6 +1,9 @@
 # Utilise une image Python de base
 FROM python:3.11-slim
 
+# Créer le répertoire pour l'application
+RUN mkdir /server
+
 # Définit le répertoire de travail dans le conteneur
 WORKDIR /server
 
@@ -12,9 +15,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie le reste du contenu du dossier server dans le conteneur
 COPY . .
-
-# Ajouter le répertoire au PYTHONPATH
-ENV PYTHONPATH=/app/server
 
 # Expose le port sur lequel l'application tournera
 EXPOSE 8000

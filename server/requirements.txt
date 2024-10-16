@@ -1,4 +1,10 @@
-fastapi 
-uvicorn 
-sqlalchemy 
+fastapi
+uvicorn
+sqlalchemy
 psycopg2-binary
+passlib[bcrypt]
+pydantic[email]
+python-dotenv
+asyncpg
+pyjwt
+alembic

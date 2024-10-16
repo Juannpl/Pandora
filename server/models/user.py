@@ -1,17 +1,16 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String
 from db.database import Base
+from core.security import verify_password  # Importer la fonction de vérification
 
 class User(Base):
     __tablename__ = "users"
-    
-    id = Column(Integer, primary_key=True, index=True)  # Identifiant
-    first_name = Column(String, index=True)            # Prénom
-    last_name = Column(String, index=True)          # Nom
-    email = Column(String, unique=True, index=True) # Email
-    age = Column(Integer)                           # Âge
-    phone_number = Column(String, nullable=True)  # Numéro de téléphone
-    address = Column(String, nullable=True)       # Adresse complète
-    city = Column(String, nullable=True)          # Ville
-    country = Column(String, nullable=True)       # Pays
-    is_active = Column(Boolean, default=True)     # Utilisateur actif ou non
-    is_admin = Column(Boolean, default=False)     # Rôle administrateur
+
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String, index=True)         
+    last_name = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+
+    def verify_user_password(self, plain_password: str) -> bool:
+        """Vérifie si le mot de passe en clair correspond au mot de passe haché de l'utilisateur."""
+        return verify_password(plain_password, self.hashed_password)
